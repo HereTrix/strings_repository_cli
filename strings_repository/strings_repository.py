@@ -58,8 +58,6 @@ class App:
             data['codes'] = langs
 
         url = config_data[HOST_KEY] + '/api/plugin/export'
-        print(url)
-        print(data)
         response = requests.post(
             url=url,
             data=data,
@@ -78,7 +76,6 @@ class App:
 
             unzip = zipfile.ZipFile(tmp)
             unzip.extractall(path)
-            unzip.close()
 
 
 if __name__ == "__main__":
