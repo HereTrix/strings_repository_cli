@@ -8,8 +8,9 @@ Application utilize `strings_repository.yaml` file for configuration. It is poss
 
 Installation
 -------
+Install via `pip install strings_repository` 
 
-Clone repository and launch `pip install .`
+or manually clone repository and launch `pip install .`
 
 Usage
 -------
