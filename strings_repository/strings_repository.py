@@ -11,6 +11,7 @@ CONFIG_FILE = 'strings_repository.yaml'
 
 HOST_KEY = "host"
 API_KEY = "api_key"
+API_KEY_ENV_VAR = "env_variable"
 TYPE_KEY = "type"
 LANGUAGES_KEY = "languages"
 TAGS_KEY = "tags"
@@ -22,18 +23,23 @@ REPO_KEY = "STRINGS_REPOSITORY_KEY"
 class App:
 
     @classmethod
-    def init_config(cls, host, token, type, languages, tags, path):
+    def init_config(cls, host, token, env_var, type, languages, tags, path):
         working_dir = os.getcwd()
         config_path = os.path.join(working_dir, CONFIG_FILE)
 
         configuration = {
             HOST_KEY: host,
-            API_KEY: token,
             TYPE_KEY: type,
             LANGUAGES_KEY: languages.split(','),
             TAGS_KEY: tags.split(','),
             PATH_KEY: path
         }
+
+        if env_var:
+            configuration[API_KEY_ENV_VAR] = env_var
+
+        if token:
+            configuration[API_KEY] = token
 
         with open(config_path, 'w') as file:
             yaml.dump(configuration, file)
@@ -44,6 +50,12 @@ class App:
         config_path = os.path.join(working_dir, CONFIG_FILE)
         with open(config_path, 'r') as file:
             config_data = yaml.safe_load(file)
+
+        env_var = config_data.get(API_KEY_ENV_VAR)
+        if env_var:
+            api_key = os.environ[env_var]
+        else:
+            api_key = config_data[API_KEY]
 
         data = {
             'type': config_data[TYPE_KEY],
@@ -62,7 +74,7 @@ class App:
             url=url,
             data=data,
             headers={
-                'Access-Token': config_data[API_KEY]
+                'Access-Token': api_key
             },
         )
 

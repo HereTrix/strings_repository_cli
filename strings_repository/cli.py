@@ -35,9 +35,14 @@ def init(
     ),
 ) -> None:
     host = typer.prompt("Enter host (with http or https)")
+
     typer.secho(
-        "Enter access token or leave empty to use environment variable STRINGS_REPOSITORY_KEY")
-    access_token = input()
+        "Enter environment variable name of API_TOKEN or press ENTER to skip"
+    )
+    env_var = input()
+    access_token = ''
+    if not env_var:
+        access_token = typer.prompt("Enter access token")
     type = typer.prompt("Enter localization format")
     languages = typer.prompt("Enter languages codes separated by comma")
     tags = typer.prompt("Enter tags separated by comma")
@@ -46,6 +51,7 @@ def init(
     App.init_config(
         host=host,
         token=access_token,
+        env_var=env_var,
         type=type,
         languages=languages,
         tags=tags,
