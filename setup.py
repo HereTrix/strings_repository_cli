@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='strings_repository',
-    version='0.1.0',
+    version='0.2.0',
     description='Simple commandline tool for pulling data from strings repository (https://github.com/HereTrix/strings_repository)',
     url='https://github.com/HereTrix/strings_repository_cli',
     download_url='https://github.com/HereTrix/strings_repository_cli/archive/refs/tags/0.1.0.tar.gz',

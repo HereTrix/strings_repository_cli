@@ -69,6 +69,8 @@ class App:
         if langs:
             data['codes'] = langs
 
+        print('Fetching data...')
+
         url = config_data[HOST_KEY] + '/api/plugin/export'
         response = requests.post(
             url=url,
@@ -77,6 +79,8 @@ class App:
                 'Access-Token': api_key
             },
         )
+
+        print('Unpacking...')
 
         with tempfile.NamedTemporaryFile(delete=True) as tmp:
             tmp.write(response.content)
@@ -88,6 +92,7 @@ class App:
 
             unzip = zipfile.ZipFile(tmp)
             unzip.extractall(path)
+            print('Completed...')
 
 
 if __name__ == "__main__":
