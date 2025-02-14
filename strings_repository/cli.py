@@ -27,6 +27,10 @@ def main(
 
 @app.command()
 def init(
+    filename: str = typer.Argument(
+        None,
+        help="Optional filename",
+    ),
     init: str = typer.Option(
         None,
         "--init",
@@ -49,6 +53,7 @@ def init(
     path = typer.prompt("Enter destination of localization")
 
     App.init_config(
+        filename=filename,
         host=host,
         token=access_token,
         env_var=env_var,
@@ -61,6 +66,10 @@ def init(
 
 @app.command()
 def pull(
+    filename: str = typer.Argument(
+        None,
+        help="Optional filename for the pull operation",
+    ),
     pull: str = typer.Option(
         None,
         "--pull",
@@ -69,6 +78,6 @@ def pull(
     )
 ) -> None:
     try:
-        App.pull()
+        App.pull(filename)
     except Exception as e:
         typer.secho(e, fg=typer.colors.RED)

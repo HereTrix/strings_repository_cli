@@ -5,7 +5,7 @@ import zipfile
 import tempfile
 
 __app_name__ = "strings_repository"
-__version__ = "0.1.0"
+__version__ = "0.3.0"
 
 CONFIG_FILE = 'strings_repository.yaml'
 
@@ -23,9 +23,10 @@ REPO_KEY = "STRINGS_REPOSITORY_KEY"
 class App:
 
     @classmethod
-    def init_config(cls, host, token, env_var, type, languages, tags, path):
+    def init_config(cls, filename, host, token, env_var, type, languages, tags, path):
         working_dir = os.getcwd()
-        config_path = os.path.join(working_dir, CONFIG_FILE)
+        file = filename if filename else CONFIG_FILE
+        config_path = os.path.join(working_dir, file)
 
         configuration = {
             HOST_KEY: host,
@@ -45,9 +46,10 @@ class App:
             yaml.dump(configuration, file)
 
     @classmethod
-    def pull(cls):
+    def pull(cls, filename):
         working_dir = os.getcwd()
-        config_path = os.path.join(working_dir, CONFIG_FILE)
+        file = filename if filename else CONFIG_FILE
+        config_path = os.path.join(working_dir, file)
         with open(config_path, 'r') as file:
             config_data = yaml.safe_load(file)
 
@@ -93,7 +95,3 @@ class App:
             unzip = zipfile.ZipFile(tmp)
             unzip.extractall(path)
             print('Completed...')
-
-
-if __name__ == "__main__":
-    App.pull()
