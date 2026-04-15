@@ -52,6 +52,11 @@ def init(
     tags = typer.prompt("Enter tags separated by comma")
     path = typer.prompt("Enter destination of localization")
 
+    typer.secho(
+        "Enter bundle version (e.g. v1, active) or press ENTER to skip"
+    )
+    bundle = input() or None
+
     App.init_config(
         filename=filename,
         host=host,
@@ -60,7 +65,8 @@ def init(
         type=type,
         languages=languages,
         tags=tags,
-        path=path
+        path=path,
+        bundle=bundle
     )
 
 
@@ -75,9 +81,15 @@ def pull(
         "--pull",
         "-p",
         help="Pull from repository using config",
-    )
+    ),
+    bundle: Optional[str] = typer.Option(
+        None,
+        "--bundle",
+        "-b",
+        help="Bundle version to export (e.g. v1, active). Overrides the bundle set in config.",
+    ),
 ) -> None:
     try:
-        App.pull(filename)
+        App.pull(filename, bundle=bundle)
     except Exception as e:
         typer.secho(e, fg=typer.colors.RED)

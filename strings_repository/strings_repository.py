@@ -16,6 +16,7 @@ TYPE_KEY = "type"
 LANGUAGES_KEY = "languages"
 TAGS_KEY = "tags"
 PATH_KEY = "path"
+BUNDLE_KEY = "bundle"
 
 REPO_KEY = "STRINGS_REPOSITORY_KEY"
 
@@ -23,7 +24,7 @@ REPO_KEY = "STRINGS_REPOSITORY_KEY"
 class App:
 
     @classmethod
-    def init_config(cls, filename, host, token, env_var, type, languages, tags, path):
+    def init_config(cls, filename, host, token, env_var, type, languages, tags, path, bundle=None):
         working_dir = os.getcwd()
         file = filename if filename else CONFIG_FILE
         config_path = os.path.join(working_dir, file)
@@ -42,11 +43,14 @@ class App:
         if token:
             configuration[API_KEY] = token
 
+        if bundle:
+            configuration[BUNDLE_KEY] = bundle
+
         with open(config_path, 'w') as file:
             yaml.dump(configuration, file)
 
     @classmethod
-    def pull(cls, filename):
+    def pull(cls, filename, bundle=None):
         working_dir = os.getcwd()
         file = filename if filename else CONFIG_FILE
         config_path = os.path.join(working_dir, file)
@@ -70,6 +74,10 @@ class App:
         langs = config_data.get(LANGUAGES_KEY)
         if langs:
             data['codes'] = langs
+
+        bundle_version = bundle or config_data.get(BUNDLE_KEY)
+        if bundle_version:
+            data['bundle_version'] = bundle_version
 
         print('Fetching data...')
 

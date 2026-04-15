@@ -1,0 +1,4 @@
+PyYAML==6.0.3
+requests==2.33.1
+typer==0.24.13
+setuptools=82.0.1
