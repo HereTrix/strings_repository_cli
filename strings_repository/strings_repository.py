@@ -5,7 +5,7 @@ import zipfile
 import tempfile
 
 __app_name__ = "strings_repository"
-__version__ = "0.3.0"
+__version__ = "1.0.0"
 
 CONFIG_FILE = 'strings_repository.yaml'
 

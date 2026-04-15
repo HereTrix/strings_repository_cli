@@ -25,17 +25,11 @@ def main(
     return
 
 
-@app.command()
+@app.command(help="Initialize a new configuration file for strings repository.")
 def init(
     filename: str = typer.Argument(
         None,
-        help="Optional filename",
-    ),
-    init: str = typer.Option(
-        None,
-        "--init",
-        "-i",
-        help="Create config file",
+        help="Config filename (defaults to strings_repository.yaml)",
     ),
 ) -> None:
     host = typer.prompt("Enter host (with http or https)")
@@ -70,17 +64,11 @@ def init(
     )
 
 
-@app.command()
+@app.command(help="Pull localizations from strings repository using config.")
 def pull(
     filename: str = typer.Argument(
         None,
-        help="Optional filename for the pull operation",
-    ),
-    pull: str = typer.Option(
-        None,
-        "--pull",
-        "-p",
-        help="Pull from repository using config",
+        help="Config filename (defaults to strings_repository.yaml)",
     ),
     bundle: Optional[str] = typer.Option(
         None,
