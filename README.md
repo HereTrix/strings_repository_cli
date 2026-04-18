@@ -86,6 +86,67 @@ tags:
 type: json
 ```
 
+### MCP proxy (stdio)
+
+The CLI can act as a stdio MCP proxy, forwarding JSON-RPC messages to the server's `/api/mcp` endpoint. This lets IDEs and AI agents that only support stdio MCP transport (e.g. Claude Code, Cursor) use StringsRepository tools without direct HTTP access.
+
+```
+strings_repository mcp [FILENAME]
+```
+
+`FILENAME` is optional. If omitted, defaults to `strings_repository.yaml`. Use it to select a specific project configuration:
+
+```
+strings_repository mcp my-project.yaml
+```
+
+#### Claude Code setup
+
+Add the following to your Claude Code MCP configuration (`.claude/mcp.json` or user-level `~/.claude/mcp.json`):
+
+```json
+{
+  "mcpServers": {
+    "strings-repository": {
+      "type": "stdio",
+      "command": "strings_repository",
+      "args": ["mcp"]
+    }
+  }
+}
+```
+
+To use a custom config file (e.g. for a specific project):
+
+```json
+{
+  "mcpServers": {
+    "strings-repository": {
+      "type": "stdio",
+      "command": "strings_repository",
+      "args": ["mcp", "my-project.yaml"]
+    }
+  }
+}
+```
+
+The proxy uses the same `host` and access token (`api_key` / `env_variable`) from the config file. Make sure the config points to a server that exposes the `/api/mcp` endpoint.
+
+#### Available MCP tools
+
+| Tool | Description |
+| ---- | ----------- |
+| `get_project` | Get project info for the configured token |
+| `get_languages` | List all configured language codes |
+| `list_tokens` | List/search localization keys |
+| `get_token` | Get a key with all its translations |
+| `create_token` | Create a new localization key |
+| `set_translation` | Create or update a translation |
+| `search_similar_tokens` | Find keys similar to a given text |
+| `suggest_token_key` | Suggest a key name from source text |
+| `get_token_naming_patterns` | Analyze the project's key naming conventions |
+| `batch_create_tokens` | Create multiple keys with translations in one call |
+
 License
 -------
 

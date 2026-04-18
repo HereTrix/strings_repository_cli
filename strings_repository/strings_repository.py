@@ -1,4 +1,6 @@
 import os
+import sys
+import json
 import requests
 import yaml
 import zipfile
@@ -103,3 +105,60 @@ class App:
             unzip = zipfile.ZipFile(tmp)
             unzip.extractall(path)
             print('Completed...')
+
+    @classmethod
+    def mcp(cls, filename):
+        working_dir = os.getcwd()
+        file = filename if filename else CONFIG_FILE
+        config_path = os.path.join(working_dir, file)
+        with open(config_path, 'r') as f:
+            config_data = yaml.safe_load(f)
+
+        env_var = config_data.get(API_KEY_ENV_VAR)
+        if env_var:
+            api_key = os.environ[env_var]
+        else:
+            api_key = config_data[API_KEY]
+
+        mcp_url = config_data[HOST_KEY].rstrip('/') + '/api/mcp'
+        headers = {
+            'Access-Token': api_key,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+        }
+
+        for line in sys.stdin:
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                message = json.loads(line)
+            except json.JSONDecodeError as e:
+                error = {
+                    'jsonrpc': '2.0',
+                    'id': None,
+                    'error': {'code': -32700, 'message': f'Parse error: {e}'},
+                }
+                sys.stdout.write(json.dumps(error) + '\n')
+                sys.stdout.flush()
+                continue
+
+            try:
+                response = requests.post(mcp_url, json=message, headers=headers)
+                response.raise_for_status()
+                sys.stdout.write(response.text.strip() + '\n')
+            except requests.HTTPError as e:
+                error = {
+                    'jsonrpc': '2.0',
+                    'id': message.get('id'),
+                    'error': {'code': -32000, 'message': f'HTTP {response.status_code}: {response.text}'},
+                }
+                sys.stdout.write(json.dumps(error) + '\n')
+            except Exception as e:
+                error = {
+                    'jsonrpc': '2.0',
+                    'id': message.get('id'),
+                    'error': {'code': -32603, 'message': str(e)},
+                }
+                sys.stdout.write(json.dumps(error) + '\n')
+            sys.stdout.flush()

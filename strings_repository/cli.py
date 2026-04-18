@@ -64,6 +64,19 @@ def init(
     )
 
 
+@app.command(help="Start MCP stdio proxy — forward JSON-RPC messages to the server's /api/mcp endpoint.")
+def mcp(
+    filename: str = typer.Argument(
+        None,
+        help="Config filename (defaults to strings_repository.yaml)",
+    ),
+) -> None:
+    try:
+        App.mcp(filename)
+    except Exception as e:
+        typer.secho(str(e), fg=typer.colors.RED)
+
+
 @app.command(help="Pull localizations from strings repository using config.")
 def pull(
     filename: str = typer.Argument(
