@@ -7,7 +7,7 @@ import zipfile
 import tempfile
 
 __app_name__ = "strings_repository"
-__version__ = "1.0.0"
+__version__ = "1.1.0"
 
 CONFIG_FILE = 'strings_repository.yaml'
 
@@ -144,7 +144,8 @@ class App:
                 continue
 
             try:
-                response = requests.post(mcp_url, json=message, headers=headers)
+                response = requests.post(
+                    mcp_url, json=message, headers=headers)
                 response.raise_for_status()
                 sys.stdout.write(response.text.strip() + '\n')
             except requests.HTTPError as e:
