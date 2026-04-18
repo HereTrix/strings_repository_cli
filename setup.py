@@ -26,7 +26,6 @@ setup(
         # Define that your audience are developers
         'Intended Audience :: Developers',
         'Topic :: Software Development :: Build Tools',
-        'License :: OSI Approved :: MIT License',   # Again, pick a license
-        'Programming Language :: Python :: 3',
+'Programming Language :: Python :: 3',
     ]
 )
